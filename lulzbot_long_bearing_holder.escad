@@ -1,0 +1,149 @@
+/* The bearing holders for a lulzbot taz (3ish?)
+
+ Copyright (C) 2019, Julia Longtin <julia.longtin@gmail.com>
+ 
+ This program is free software: you can redistribute it and/or modify
+ it under the terms of the GNU Affero General Public License as published by
+ the Free Software Foundation, either version 3 of the License, or
+ (at your option) any later version.
+
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU Affero General Public License for more details.
+
+ You should have received a copy of the GNU Affero General Public License
+ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+/* You can contact the author via email, at julia.longtin@gmail.com,
+   or via postal mail at:
+   Bärbel-Boley-Ring 38,
+   Berlin, Germany
+   13355
+ */
+
+// We're building this with the part oriented such for the right bearing holder, installed-Z is drawn-X, installed-X is drawn-Z, and installed Y is drawn Y.
+module mounting_plate(width, skinny_width, total_height, top_height, middle_height, bottom_height, thickness)
+{
+  gap=(total_height-(top_height+middle_height+bottom_height))/2;
+  skinny_offset=(width-skinny_width)/2;
+  linear_extrude (thickness)
+    union () {
+    translate (total_height-top_height, 0) square (top_height, width);
+    translate (total_height-top_height-gap, 0) polygon([(0, skinny_offset),(0, width-skinny_offset),(gap, width),(gap,0)]);
+    translate (total_height-top_height-gap-middle_height, skinny_offset) square(middle_height, skinny_width);
+    translate (bottom_height, 0) polygon ([(0,0),(0, width),(gap, width-skinny_offset),(gap, skinny_offset)]);
+    square(bottom_height, width);
+  }
+}
+
+module mounting_holes (hole_diameter, hole_distance_from_center, thickness, total_height, outside_holes_from_edge, width, hole_row2_inset)
+{
+  hole_radius=hole_diameter/2;
+  holes_apart=hole_distance_from_center;
+  linear_extrude (thickness)
+    union() {
+    translate (total_height-outside_holes_from_edge,(width/2)-holes_apart) circle(hole_radius);
+    translate (total_height-outside_holes_from_edge,(width/2)+holes_apart) circle(hole_radius);
+    translate (outside_holes_from_edge+hole_row2_inset,(width/2)-holes_apart) circle(hole_radius);
+    translate (outside_holes_from_edge+hole_row2_inset,(width/2)+holes_apart) circle(hole_radius);
+    translate (outside_holes_from_edge,(width/2)-holes_apart) circle(hole_radius);
+    translate (outside_holes_from_edge,(width/2)+holes_apart) circle(hole_radius);
+  }
+}
+
+// We're building this such that for the right bearing holder, installed-Z is drawn-Z, installed-X is drawn-Y, and installed Y is drawn X.
+// make a hole in the mounting plate for the bearing holder
+module bearing_holder_profile(plate_height, bearing_diameter)
+{
+  bearing_radius=bearing_diameter/2;
+  linear_extrude(plate_height)
+    circle (bearing_radius);
+}
+  
+// We're building this such that for the right bearing holder, installed-Z is drawn-Z, installed-X is drawn-Y, and installed Y is drawn X.
+module bearing_holder(holder_length, bearing_diameter, holder_thickness, ziptie_diameter, ziptie_thickness, rod_diameter, ziptie_rod_offset, bearing_inset, bearing_length, gap_width)
+{
+  bearing_radius=bearing_diameter/2;
+  rod_radius=rod_diameter/2;
+  union ()
+  {
+    difference()
+      {
+	linear_extrude(holder_length) circle (bearing_radius+holder_thickness);
+	translate (-(bearing_radius+holder_thickness),-(rod_radius+ziptie_rod_offset+ziptie_thickness),holder_length-bearing_inset) cube(bearing_diameter+holder_thickness*2, ziptie_thickness, ziptie_diameter);
+	translate (-(bearing_radius+holder_thickness),-(rod_radius+ziptie_rod_offset+ziptie_thickness),holder_length-bearing_inset-bearing_length-ziptie_diameter) cube(bearing_diameter+holder_thickness*2, ziptie_thickness, ziptie_diameter);
+	if ((bearing_inset*4+bearing_length*3)<holder_length)
+	  {
+	    translate (-(bearing_radius+holder_thickness),-(rod_radius+ziptie_rod_offset+ziptie_thickness),holder_length/2+bearing_length/2) cube(bearing_diameter+holder_thickness*2, ziptie_thickness, ziptie_diameter);
+	    translate (-(bearing_radius+holder_thickness),-(rod_radius+ziptie_rod_offset+ziptie_thickness),holder_length/2-bearing_length/2-ziptie_diameter) cube(bearing_diameter+holder_thickness*2, ziptie_thickness, ziptie_diameter);
+	  }
+	translate (-(bearing_radius+holder_thickness),-(rod_radius+ziptie_rod_offset+ziptie_thickness),bearing_inset+bearing_length) cube(bearing_diameter+holder_thickness*2, ziptie_thickness, ziptie_diameter);
+	translate (-(bearing_radius+holder_thickness),-(rod_radius+ziptie_rod_offset+ziptie_thickness),bearing_inset-ziptie_diameter) cube(bearing_diameter+holder_thickness*2, ziptie_thickness, ziptie_diameter);
+	linear_extrude(holder_length) circle (bearing_radius);
+	translate (-gap_width/2,-(bearing_radius+holder_thickness),0) cube (gap_width, bearing_radius+holder_thickness, holder_length); 
+      }
+  }
+}
+
+// taken from measurements of the original part.
+plate_width=42.5;
+plate_width_skinny=28.5;
+plate_height=97;
+plate_thickness=7;
+top_full_width=28.8;
+middle_skinny=26.5;
+bottom_full_width=18;
+hole_diameter=5; // we use M3 screws through these holes.
+hole_distance_from_edge=(plate_height-(95.7-hole_diameter))/2;
+hole_distance_from_center=(36.5-hole_diameter)/2;
+hole_second_row_inset=18.6-hole_diameter;
+
+
+// shipped IGUS bearings:
+bearing_diameter=19;
+bearing_length=29;
+// brass bushings (from amazon):
+/*
+bearing_diameter=16;
+bearing_length=20;
+*/
+
+rod_diameter=10;
+
+// the distance between the center of rod, and the backside of the mounting plate.
+rod_offset=12;
+
+// measured
+//ziptie_thickness=1;
+//ziptie_diameter=2.5;
+// fudged.
+ziptie_thickness=1.2;
+ziptie_diameter=2.7;
+
+ziptie_rod_offset=(bearing_diameter-rod_diameter)/4;
+
+//strengthen all of the intersections between the holder, and the mounting plate. use 1.5 for igus bearings.
+rounding=1.5;
+//rounding=3;
+
+holder_length=plate_height-rounding*2;
+holder_thickness=3.3;
+
+// inset of bearings from the end of the bearing holder.
+bearing_inset=7.5;
+
+gap_width=10;
+
+difference () {
+  union (r=rounding)
+  {
+    mounting_plate(plate_width, plate_width_skinny, plate_height, top_full_width, middle_skinny, bottom_full_width, plate_thickness);
+    translate (rounding,plate_width/2,rod_offset) rotate ([0,-90,180]) rotate ([0,0,90]) bearing_holder(holder_length, bearing_diameter, holder_thickness, ziptie_diameter, ziptie_thickness, rod_diameter, ziptie_rod_offset, bearing_inset, bearing_length, gap_width);
+  }
+  mounting_holes(hole_diameter, hole_distance_from_center, plate_thickness, plate_height, hole_distance_from_edge, plate_width, hole_second_row_inset);
+  // defend the back of the plate and the inside of the bearing holder from rounding.
+  translate (0,plate_width/2,rod_offset) rotate ([0,-90,180]) bearing_holder_profile(plate_height, bearing_diameter);
+  translate (0,0,-rounding) cube (plate_height,plate_width, rounding);
+}

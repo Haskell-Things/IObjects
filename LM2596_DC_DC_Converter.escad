@@ -1,0 +1,109 @@
+/* A small case for the LM2596 based DC to DC converter from amazon.
+
+ Copyright (C) 2019, Julia Longtin <julia.longtin@gmail.com>
+ 
+ This program is free software: you can redistribute it and/or modify
+ it under the terms of the GNU Affero General Public License as published by
+ the Free Software Foundation, either version 3 of the License, or
+ (at your option) any later version.
+
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU Affero General Public License for more details.
+
+ You should have received a copy of the GNU Affero General Public License
+ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+/* You can contact the author via email, at julia.longtin@gmail.com,
+   or via postal mail at:
+   Bärbel-Boley-Ring 38,
+   Berlin, Germany
+   13355
+ */
+
+include <taz_metal_parts.escad>;
+
+board_x=43.35;
+board_y=21.1;
+
+m3_in_holes_distance=36.95;
+
+/* distance between holes on the X axis. */
+hole_x_distance=30.25;
+hole_x_from_edge=(board_x-hole_x_distance)/2;
+hole_y_from_edge=m3_head_diameter/2;
+
+pad_x_size=3.2;
+pad_y_size=3.2;
+
+adjustor_inset=hole_x_from_edge-m3_hole_size/2+21.15-2.3/2;
+
+module bottom_layer (board_width, board_length, pad_width, pad_height, hole_x_inset, hole_y_inset, inset_hole_width, m3_hole_width) {
+  union () {
+    linear_extrude(2) {
+      difference () {
+	translate (-pad_width, -pad_height) square (board_width+pad_width*2, board_length+pad_width*2);
+	translate (hole_x_inset, board_length-hole_y_inset) circle (inset_hole_width/2);
+	translate (board_width-hole_x_inset, hole_y_inset) circle (inset_hole_width/2);
+      }      
+    }
+    translate (0,0,2)
+    difference() {
+      linear_extrude (3) {
+	square (board_width, board_length);
+      }
+      linear_extrude (3) {
+	square (pad_width, pad_height);
+	translate (board_width-pad_width,0) square (pad_width, pad_height);
+	translate (0,board_length-pad_height) square (pad_width, pad_height);
+	translate (board_width-pad_width,board_length-pad_height) square (pad_width, pad_height);
+	translate (hole_x_inset, board_length-hole_y_inset) circle (inset_hole_width/2);
+	translate (board_width-hole_x_inset, hole_y_inset) circle (inset_hole_width/2);
+      }
+    }
+    translate (0,0,5) linear_extrude (2.5) {
+      intersection () {
+	square (board_width, board_length);
+	difference() {
+	  union () {
+	    translate (hole_x_inset, board_length-hole_y_inset) circle (hole_y_inset+1);
+	    translate (board_width-hole_x_inset, hole_y_inset) circle (hole_y_inset+1);
+	  }
+	  square (pad_width, pad_height);
+	  translate (board_width-pad_width,0) square (pad_width, pad_height);
+	  translate (0,board_length-pad_height) square (pad_width, pad_height);
+	  translate (board_width-pad_width,board_length-pad_height) square (pad_width, pad_height);
+	  translate (hole_x_inset, board_length-hole_y_inset) circle (m3_hole_width/2);
+       	  translate (board_width-hole_x_inset, hole_y_inset) circle (m3_hole_width/2);
+	}
+      }
+      }
+
+  }
+}
+
+module top_layer (board_width, board_length, pad_width, pad_height, hole_x_inset, hole_y_inset, inset_hole_width, m3_hole_width, adjustor_x_inset) {
+    difference() {
+      linear_extrude (3) {
+	square (board_width, board_length);
+      }
+      linear_extrude (3) {
+	square (pad_width, pad_height);
+	translate (board_width-pad_width,0) square (pad_width, pad_height);
+	translate (0,board_length-pad_height) square (pad_width, pad_height);
+	translate (board_width-pad_width,board_length-pad_height) square (pad_width, pad_height);
+	translate (hole_x_inset, board_length-hole_y_inset) circle (inset_hole_width/2);
+	translate (board_width-hole_x_inset, hole_y_inset) circle (inset_hole_width/2);
+	translate (adjustor_x_inset, board_length-hole_y_inset) circle (inset_hole_width/2);
+	translate (board_width-adjustor_x_inset, hole_y_inset) circle (inset_hole_width/2);
+	
+      }
+    }
+}
+
+/* which half you want. */
+bottom_layer(board_x, board_y, pad_x_size, pad_y_size, hole_x_from_edge, hole_y_from_edge, m3_inset_width, m3_hole_size);
+//top_layer(board_x, board_y, pad_x_size, pad_y_size, hole_x_from_edge, hole_y_from_edge, m3_inset_width, m3_hole_size, adjustor_inset);
+

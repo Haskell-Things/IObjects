@@ -1,0 +1,71 @@
+/* Misc parts i use on my Taz.
+
+ Copyright (C) 2019, Julia Longtin <julia.longtin@gmail.com>
+ 
+ This program is free software: you can redistribute it and/or modify
+ it under the terms of the GNU Affero General Public License as published by
+ the Free Software Foundation, either version 3 of the License, or
+ (at your option) any later version.
+
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU Affero General Public License for more details.
+
+ You should have received a copy of the GNU Affero General Public License
+ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+/* You can contact the author via email, at julia.longtin@gmail.com,
+   or via postal mail at:
+   Bärbel-Boley-Ring 38,
+   Berlin, Germany
+   13355
+ */
+
+// aabcooling.com super silent fan 5
+// Measured.
+fan50_width=50;
+fan50_height=50;
+fan50_diagonal=67.47;
+fan50_depth=11.2;
+// from package.
+fan50_maxrpm=3500;
+fan50_airflow=14.45; // m³/hour
+fan50_noise=17.5; // dB(A)
+fan50_weight=23; // G
+fan50_voltage=12;
+// from label.
+fan50_amperage=0.05;
+
+// fractal design silent series R3
+// FD-FAN-SSR3-40-WT
+fan40_width=40;
+fan40_height=40;
+fan40_depth=10.5;
+fan40_screw_head_inset=3.15;
+fan40_screw_hole_diameter=3.1;
+fan40_screw_hole_width=8;
+fan40_screw_hole_depth=7.75;
+fan40_backplate_thickness=2.75;
+
+// Sourcingmap m3 x 3mm cylindrical brass knurled round thread embedded nut set of 200
+m3_inset_width=3.6;
+m3_inset_depth=2.8;
+
+m3_head_diameter=5.35;
+m3_diameter=2.85;
+m3_hole_size=3;
+
+m4_head_diameter=6.9;
+m4_head_thickness=3.9;
+m4_diameter=3.95;
+m4_hole_size=4;
+
+
+// thickness is away from the center of the shaft of 2020, length is down the axis, and width is across the axis.
+x2020_nut_thickness=4.5;
+x2020_nut_length=9.85;
+x2020_nut_width=9.2;
+x2020_nut_visible_width=6.3;
+
