@@ -1,0 +1,4 @@
+union () {
+  cube (10);
+  translate (15,15,0) cube (10);
+}

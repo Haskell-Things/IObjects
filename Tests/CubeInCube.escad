@@ -1,0 +1,4 @@
+difference () {
+  cube (10);
+  translate (2.5, 2.5, 2.5) cube (5);
+}
