@@ -1,0 +1,105 @@
+/* A blank tool holder for a lulzbot taz (3ish?)
+ * Copyright 2019, Julia Longtin <julia.longtin@gmail.com>
+ * Released under the GNU AGPLV3+, see LICENSE
+ */
+
+// drawn X is installed X, drawn Y is installed Z, drawn Z is installed Y. Origin is at X=left edge of part, Y=tip of blade inserting into socket.
+
+// Thickness of the mounting plate.
+plate_thickness=6;
+// the tab at the top of the plate, which the screw goes through.
+tab_width=25;
+// the height of the tab, vertically.
+//tab_height=23.1526;
+tab_height=23;
+// the width of the hole in the tab.
+tab_hole_width=4.2;
+// the height of the hole in the tab.
+tab_hole_height=7.2;
+// the distance between the bottom of the tab and the bottom edge of the hole in the tab.
+tab_hole_offset=10.5;
+
+// the hole through the tab. we place an M3 bolt through this hole, to fasten the plate into place.
+// drawn X is installed X, drawn Y is installed Z, drawn Z is installed Y. Origin is at the center of the 'bottom circle'.
+module elongated_hole(width, height) {
+  radius=width/2;
+  translate (0,radius)
+    union () {
+    circle (r=radius);
+    translate (-radius,0) square (width, height-width);
+    translate (0,height-width) circle (r=radius);
+  }
+}
+
+// the tab on the top of the plate. We place an M3 bolt through this, to fasten it into place.
+// drawn X is installed X, drawn Y is installed Z, drawn Z is installed Y. Origin is at X=left edge of part, Y=bottom edge of part.
+module tab(width, height, thickness, hole_width, hole_height, hole_z_offset) {
+  difference () {
+    cube(width, height, thickness);    
+    translate (width/2,0,0) linear_extrude (thickness) translate (0, hole_z_offset) elongated_hole(hole_width, hole_height);
+  }
+}
+
+// how much of the plate vertically is 'pure cube'.
+plate_flat_height=78;
+// how wide is the plate, on the 'pure cube' part.
+plate_flat_width=100;
+
+// the empty section of a plate. EG: where you are free to build up your tool holder.
+// drawn X is installed X, drawn Y is installed Z, drawn Z is installed Y. Origin is at X=left edge of part, Y=bottom edge of part.
+module plate_empty_space(width, height, thickness) {
+  cube (width, height, thickness);
+}
+
+
+// how much of the plate vertically has the convex rounding on the corners.
+//plate_round_height=6.4794;
+plate_round_height=6.5;
+// after the corners are taken away, how wide is the plate, where it meets it's blade.
+plate_round_end_width=88;
+// the radius of the missing circle
+plate_round_radius=6.5;
+
+
+// the part of the plate with the round notches in the left/right side.
+// drawn X is installed X, drawn Y is installed Z, drawn Z is installed Y. Origin is at X=left edge of part, Y=bottom edge of part.
+module plate_round_mount(width, height, thickness, end_width, radius) {
+  linear_extrude (thickness)
+  difference () {
+    square (width, height);
+    circle (r=radius);
+    translate (width, 0) circle (r=radius);
+    }
+}
+
+// how much of the plate vertically is the tapered blade.
+//blade_height=6.0430;
+blade_height=6;
+// the blade goes straight down, and does not taper.
+blade_finish_width=88;
+// the center of the blade goes further down than the sides by this amount.
+//blade_center_offset=5.2802;
+blade_center_offset=5.3;
+
+// the blade at the bottom of the plate.
+module blade(width, length, height, center_offset) {
+// drawn X is installed X, drawn Y is installed Z, drawn Z is installed Y. Origin is at X=left edge of part, Y=bottom edge of part.
+  union () {
+    linear_extrude (height) polygon( [(0, center_offset+length), (width, center_offset+length), (width/2, length)] );
+    translate (width/2,0,0) rotate ([0,-90,0]) linear_extrude (width/2, translate(z)=(0,z/(width/2)*(center_offset)))  polygon( [(0, 0), (0,length), (height,length)]);
+    translate (width,center_offset,0) rotate ([0,-90,0]) linear_extrude (width/2, translate(z)=(0,-z/(width/2)*(center_offset)))  polygon( [(0, 0), (0, length), (height,length)]);
+  }
+}
+
+module blank_tool_plate(tab_width, tab_height, thickness, tab_hole_width, tab_hole_height, tab_hole_z_offset, plate_flat_width, plate_flat_height, plate_round_width, plate_round_height, plate_round_end_width, plate_round_radius, blade_height, blade_center_offset) {
+  union () {
+    translate ((plate_flat_width/2)+(-tab_width/2), plate_round_height+plate_flat_height+blade_height+blade_center_offset, 0) tab (tab_width, tab_height, thickness, tab_hole_width, tab_hole_height, tab_hole_z_offset);
+    translate (0,plate_round_height+blade_height+blade_center_offset,0) plate_empty_space(plate_flat_width, plate_flat_height, thickness);
+    translate (0,blade_height+blade_center_offset,0) plate_round_mount(plate_round_width, plate_round_height, thickness, plate_round_end_width, plate_round_radius);
+    translate ((plate_flat_width-plate_round_end_width)/2,0,0) blade(plate_round_end_width, blade_height, thickness, blade_center_offset);
+  }
+}
+
+// uncomment to generate. leave commented to use as a library.
+blank_tool_plate(tab_width, tab_height, plate_thickness, tab_hole_width, tab_hole_height, tab_hole_offset, plate_flat_width, plate_flat_height, plate_flat_width, plate_round_height, plate_round_end_width, plate_round_radius, blade_height, blade_center_offset);
+
