@@ -1,7 +1,0 @@
-module bead_3d(height,diameter,hole_diameter) {
-  difference() {
-    cylinder(r=diameter/2, h=height);
-    cylinder(r=hole_diameter/2, h=height);
-  }
-}
-bead_3d(height=10, diameter=10, hole_diameter=3);
