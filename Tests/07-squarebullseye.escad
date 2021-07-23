@@ -1,4 +1,4 @@
-module target_3d(height,thickness, distance) {
+module target_3d(height, thickness, distance) {
   linear_extrude (height=height)
     {
       union () {
@@ -15,4 +15,4 @@ module target_3d(height,thickness, distance) {
     }
   }
 
-target_3d(height=10, thickness=5, distance=4);
+target_3d(height=1, thickness=5, distance=4);
