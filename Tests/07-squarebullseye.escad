@@ -1,0 +1,18 @@
+module target_3d(height, thickness, distance) {
+  linear_extrude (height=height)
+    {
+      union () {
+        square(size=thickness, center=true);
+        difference () {
+          square (size=thickness*3+distance, center=true);
+	  square (size=thickness+distance, center=true);
+        }
+        difference () {
+          square (size=thickness*5+distance*2, center=true);
+          square (size=thickness*3+distance*2, center=true);
+        }
+      }
+    }
+  }
+
+target_3d(height=1, thickness=5, distance=4);
