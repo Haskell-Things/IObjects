@@ -1,0 +1,22 @@
+
+/* the label under the dimm sockets. labeled 'DIMM A/nDIMM B'. */
+// in millimeters.
+
+/* with across the sticker. */
+W1=70;
+
+/* second width. */
+w2=60;
+
+/* total height. */
+h1=27;
+
+/* height until slot. */
+h2=11;
+
+under_dimm_sticker() {
+union () {
+  translate (0,(w1-w2)/2) square (h1,w2);
+  square(h2,w1);
+  }
+}

@@ -1,0 +1,24 @@
+module gear_tooth_2d(radius, angle, arc, arcdiff, height) {
+  polygon([[(radius)*cos(angle), (radius)*sin(angle)],
+           [(radius)*cos(angle+arc), (radius)*sin(angle+arc)],
+	   [(radius+height)*cos(angle+arc-arcdiff), (radius+height)*sin(angle+arc-arcdiff)],
+	   [(radius+height)*cos(angle+arcdiff), (radius+height)*sin(angle+arcdiff)]
+	  ]);
+}
+module gear_2d(diameter, hole, duty=1/2, arcdiff=1/5, teeth, tooth_height) {
+  radius=diameter/2;
+  union(){
+    difference(){
+      circle(r=radius);
+      circle(r=hole/2);
+    }
+    for( angle=[ (2*pi)/teeth: (2*pi)/teeth: 2*pi] )
+      gear_tooth_2d(radius, angle, (2*pi)/(teeth/duty), ((2*pi)/(teeth))*arcdiff, tooth_height);
+  }
+}
+module gear_3d(diameter, height, hole, teeth, tooth_height) {
+  linear_extrude(height){
+    gear_2d(diameter, hole, 0.5, 0.1, teeth, tooth_height);
+  }
+}
+gear_3d(height=10, diameter=120, hole=10, teeth=5, tooth_height=10);

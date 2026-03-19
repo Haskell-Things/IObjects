@@ -1,0 +1,5 @@
+module m(x) {
+if (x > 0) { m(x-1); }
+echo  (x);
+}
+m(3);

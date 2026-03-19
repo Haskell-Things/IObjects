@@ -1,0 +1,61 @@
+/* the width of the ring around the camera, used by the original base for holding onto the camera. */
+ridge=3.5;
+
+/*the amount of the body of the microscope above the ridge that is continuously flat (not tapered). */
+flat_body_length=23;
+
+/* the diameter of the flat area above the ridge. */
+flat_body_diameter=33;
+
+/* the distance between the bottom of the ring, and the end of the microscope. this distance in tapered. */
+tapered_end_length=39;
+
+/* the diameter at the end the microscope is at. */
+tapered_end_diameter=30;
+
+/* the diameter at the ring. */
+ring_width=29.25;
+
+/* from the tapered end to the '50x <> 1000x' label. */
+tapered_end_to_label=17.75;
+
+/* height of the '50x <> 1000x' label. */
+label_height=4.4;
+
+/* from the top of the ring to the 'snap' button. */
+ring_to_button=10.30;
+
+/* the ziptie we're going to use to strap the camera to the mount. */
+/* real. */
+//ziptie_diameter=2.5;
+//ziptie_thickness=1.0;
+/* fudged. */
+ziptie_diameter=2.8;
+ziptie_thickness=1.5;
+
+holder_y_offset=10;
+
+/* drawn with*/
+module lower_holder() {
+}
+
+module upper_holder() {
+}
+
+module microscope_mount ()
+{
+  union () {
+    include <lulzbot_tool_holding_plate.escad>;
+
+    /* where to center the holder. the middle of the flat plate. */
+    holder_center=plate_flat_width/2;
+
+    /* the point closest to the bottom of the plate that the holder can occupy. */
+    holder_bottom=blade_height+blade_center_offset+plate_round_height;
+
+    upper_holder();
+    lower_holder();
+  }
+}
+
+microscope_mount();

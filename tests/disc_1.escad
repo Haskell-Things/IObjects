@@ -1,0 +1,6 @@
+module cylinder_3d(height, diameter){
+  linear_extrude(height){
+    circle(r=diameter/2);
+  }
+}
+cylinder_3d(height=10, diameter=120);

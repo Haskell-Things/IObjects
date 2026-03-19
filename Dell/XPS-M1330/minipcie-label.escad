@@ -1,0 +1,27 @@
+/* the label under the mini-pcie sockets. labeled 'WWAN\nWLAN'. */
+
+/* height in total. */
+h1=64;
+
+/
+wwan_h=32.5;
+wwan_w=46.5;
+38.5;
+
+wwan_top_to_gap=24.6;
+wwan_gap_width=8;
+wwan_gap_height=7;;
+wlan_h=32.7;
+wian_w=54.6;
+wlan_top_to_gap=25;
+wlan_left_to_gap=8.7;
+right_offset=2.8;
+
+peg_width=4.8;
+wwan_peg_height=3;
+wlan_peg_height=1.7;
+
+inset_height=10;
+inset_from_left_edge=3;
+flap_width=7.3;
+inset_right_side=16.5;

@@ -1,0 +1,54 @@
+module outside_inlet(interface_depth, internal_diameter, inlet_thickness) {
+  linear_extrude (interface_depth)
+      circle (r=((inlet_thickness+internal_diameter)/2));
+}
+
+module inside_inlet(interface_depth, internal_diameter, inlet_thickness) {
+  linear_extrude (interface_depth)
+      circle (r=(internal_diameter/2));
+}
+
+module outside_channel_round(channel_length, inlet_diameter, thickness, outlet_diameter) {
+  outside_inlet=inlet_diameter+thickness;
+  outside_outlet=outlet_diameter+thickness;
+  cylinder (h=channel_length, r1=outside_inlet/2, r2=outside_outlet/2);
+}
+
+module inside_channel_round(channel_length, inlet_diameter, outlet_diameter) {
+  cylinder (h=channel_length, r1=inlet_diameter/2, r2=outlet_diameter/2);
+}
+
+module inside_channel_rectangle(channel_length, outlet_width, outlet_height) {
+  translate (-outlet_width/2,0,0) rotate([90,0,90]) linear_extrude (outlet_width) polygon ([[-outlet_height/2, channel_length],[outlet_height/2, channel_length],[outlet_width/2,0],[-outlet_width/2,0]]);
+}
+
+module outside_channel_rectangle(channel_length, outlet_width, outlet_height, thickness) {
+  translate (-(outlet_width+(thickness*2))/2,0,0) rotate([90,0,90]) linear_extrude (outlet_width+2*thickness) polygon ([[-(outlet_height+(2*thickness))/2, channel_length],[(outlet_height+(2*thickness))/2, channel_length],[(outlet_width+thickness)/2,0],[-(outlet_width+thickness)/2,0]]);
+}
+
+/* Original inlet: 13 cm internal, 15.5 external, 1.5 cminterface*/
+
+inlet_internal_diameter=130;
+inlet_external_diameter=154;
+inlet_interface_depth=15;
+inlet_thickness=10;
+outlet_internal_width=60;
+outlet_internal_height=220;
+channel = 120;
+
+union () {
+  difference () {
+    union () {
+      outside_inlet(inlet_interface_depth+1, inlet_external_diameter, inlet_thickness);
+      translate (0,0,inlet_interface_depth) outside_channel_round(channel, inlet_external_diameter, inlet_thickness, outlet_internal_width);
+      translate (0,0,-30) outside_channel_rectangle(channel+50, outlet_internal_width, outlet_internal_height, inlet_thickness);
+      translate (0,0,133) cube(center=true, x=outlet_internal_width+inlet_thickness, y=outlet_internal_height+(inlet_thickness*6), z=inlet_thickness); 
+    }    
+    union() {
+      inside_inlet(inlet_interface_depth-1, inlet_external_diameter, inlet_thickness);
+      translate (0,0,inlet_interface_depth) inside_channel_round(channel, inlet_external_diameter, inlet_thickness, outlet_internal_width);
+      translate (0,0,-30) inside_channel_rectangle(channel+50, outlet_internal_width, outlet_internal_height);
+      translate (0,0,-31) inside_inlet(41, inlet_external_diameter, inlet_thickness);
+    }
+  }
+}

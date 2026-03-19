@@ -1,0 +1,17 @@
+include <taz_metal_parts.escad>;
+// the maximum length for our adapter block, along the longest axis of the display.
+block_length=34;
+
+plate_to_edge=26;
+plate_thickness=2.5;
+plate_m4_end=11.7;
+plate_to_bottom_of_screw=16;
+block_width=23;
+block_thickness=9;
+m4_outside_outside=19.8;
+
+module mounting_block(width, depth, thickness, mounting_bolt_x, mounting_bolt_y, bolt_hole_width, bolt_head_width, bolt_head_recess)
+{
+  difference() {
+    cube (width, depth, thickness);
+}

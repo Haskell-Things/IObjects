@@ -1,0 +1,17 @@
+module mounting_plate(width, skinny_width, total_height, top_height, middle_height, bottom_height, thickness)//, hole_diameter, hole_from_edge, holes_apart, second_holes_gap)
+{
+  linear_extrude(thickness)
+    difference () {circle(10);square(5);}
+}
+
+plate_width=44;
+plate_width_skinny=29;
+plate_height=98;
+plate_thickness=7;
+
+top_full_width=29;
+middle_skinny=26.5;
+bottom_full_width=18;
+
+mounting_plate(plate_width, plate_width_skinny, plate_height, top_full_width, middle_skinny, bottom_full_width, plate_thickness);
+

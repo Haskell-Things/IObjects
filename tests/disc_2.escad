@@ -1,0 +1,9 @@
+module disc_2d(diameter){
+  radius=diameter/2;
+  circle(r=radius);
+}
+module disc_3d(diameter, thickness){
+  linear_extrude(thickness)
+    disc_2d(diameter);
+}
+disc_3d(thickness=10, diameter=120);

@@ -1,0 +1,4 @@
+difference () {
+  cube (x1,y1,z1);
+  cube (x1-mindiff,y1-mindiff,z1-mindiff);
+}

@@ -1,0 +1,9 @@
+module test (xe,ro,ye,w)
+{
+  rotate ([0,0,10]) translate (-xe,ro-2,0) cube(2*xe,ye+2,w);
+}
+xe=2.5;
+ro=25;
+ye=8;
+w=50;
+test(xe,ro,ye,w);
